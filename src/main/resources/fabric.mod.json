@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "modpanel",
+	"version": "${version}",
+	"name": "ModPanel",
+	"description": "A universal configuration GUI that makes it easy to customize settings of other Minecraft mods.",
+	"authors": [
+		"ModPanel"
+	],
+	"contact": {},
+	"license": "MIT",
+	"icon": "assets/modpanel/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"client": [
+			"com.modpanel.client.ModPanelClient"
+		],
+		"modmenu": [
+			"com.modpanel.client.ModMenuIntegration"
+		]
+	},
+	"mixins": [
+		"modpanel.mixins.json",
+		{
+			"config": "modpanel.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.20.1",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*",
+		"cloth-config": ">=15.0.128"
+	},
+	"suggests": {
+		"placeholder-api": "*",
+		"modmenu": "*"
+	}
+}

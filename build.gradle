@@ -1,0 +1,115 @@
+plugins {
+	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+	id 'maven-publish'
+}
+
+repositories {
+	// Dependencies are provided locally via LIBS/; no remote repos required.
+}
+
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"modpanel" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+}
+
+fabricApi {
+	configureDataGeneration {
+		client = true
+		modId = "modpanel"
+	}
+}
+
+def libsDir = file("LIBS")
+
+dependencies {
+	// To change the versions see the gradle.properties file
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	// Fabric API (resolved from the local Gradle cache / Maven coordinates)
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// Cloth Config API (required, from LIBS)
+	modImplementation files("${libsDir}/cloth-config-15.0.140-fabric.jar")
+
+	// Text Placeholder API (optional, from LIBS)
+	modCompileOnly files("${libsDir}/placeholder-api-2.4.2+1.21.jar")
+	modRuntimeOnly files("${libsDir}/placeholder-api-2.4.2+1.21.jar")
+
+	// Mod Menu (optional) - only if jar is present in LIBS
+	def modmenuJar = file("${libsDir}/modmenu-11.0.5.jar")
+	if (modmenuJar.exists()) {
+		modCompileOnly files(modmenuJar)
+		modRuntimeOnly files(modmenuJar)
+	}
+
+	// Tests
+	testImplementation "org.junit.jupiter:junit-jupiter:5.12.2"
+	testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.12.2"
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+// Conditionally exclude Mod Menu integration source when jar is absent.
+def modmenuJar = file("${libsDir}/modmenu-11.0.5.jar")
+if (!modmenuJar.exists()) {
+	sourceSets {
+		client {
+			java {
+				exclude "com/modpanel/client/ModMenuIntegration.java"
+			}
+		}
+	}
+}
+
+processResources {
+	def version = project.version
+	inputs.property "version", version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+}
+
+java {
+	withSourcesJar()
+
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+jar {
+	def projectName = project.name
+	inputs.property "projectName", projectName
+
+	from("LICENSE") {
+		rename { "${it}_$projectName"}
+	}
+}
+
+publishing {
+	publications {
+		create("mavenJava", MavenPublication) {
+			from components.java
+		}
+	}
+	repositories {
+	}
+}
