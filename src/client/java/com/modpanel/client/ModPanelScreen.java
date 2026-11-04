@@ -53,6 +53,7 @@ public class ModPanelScreen extends Screen {
         void refresh() {
             clearEntries();
             List<ModRegistry.ModInfo> mods = ModPanel.MOD_REGISTRY.getLoadedMods().stream()
+                    .filter(m -> !m.id().startsWith("fabric") && !m.id().equals("java") && !m.id().equals("minecraft") && !m.id().equals("mixinextras") && !m.id().equals("modpanel"))
                     .filter(m -> query.isBlank() || m.name().toLowerCase().contains(query.toLowerCase()) || m.id().toLowerCase().contains(query.toLowerCase()))
                     .collect(Collectors.toList());
             for (ModRegistry.ModInfo mod : mods) {
