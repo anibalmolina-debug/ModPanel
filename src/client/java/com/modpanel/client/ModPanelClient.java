@@ -20,6 +20,7 @@ public class ModPanelClient implements ClientModInitializer {
 		// Register providers and adapters
 		com.modpanel.ModPanel.DISCOVERY.registerProvider(new com.modpanel.discovery.LithiumProvider());
 		com.modpanel.ModPanel.DISCOVERY.registerProvider(new com.modpanel.discovery.GenericPropertiesProvider());
+		com.modpanel.ModPanel.DISCOVERY.registerProvider(new com.modpanel.discovery.GenericColonProvider());
 		com.modpanel.ModPanel.DISCOVERY.registerProvider(new com.modpanel.discovery.GenericJsonProvider());
 		com.modpanel.ModPanel.DISCOVERY.registerProvider(new com.modpanel.discovery.GenericTomlProvider());
 		com.modpanel.ModPanel.DISCOVERY.registerProvider(new com.modpanel.discovery.PropertiesProvider());
@@ -28,6 +29,7 @@ public class ModPanelClient implements ClientModInitializer {
 		com.modpanel.ModPanel.DISCOVERY.registerProvider(new com.modpanel.discovery.LibraryProvider());
 		com.modpanel.ModPanel.ADAPTER_MANAGER.register(new com.modpanel.adapter.LithiumAdapter());
 		com.modpanel.ModPanel.ADAPTER_MANAGER.register(new com.modpanel.adapter.GenericPropertiesAdapter());
+		com.modpanel.ModPanel.ADAPTER_MANAGER.register(new com.modpanel.adapter.GenericColonAdapter());
 		com.modpanel.ModPanel.ADAPTER_MANAGER.register(new com.modpanel.adapter.GenericJsonAdapter());
 		com.modpanel.ModPanel.ADAPTER_MANAGER.register(new com.modpanel.adapter.GenericTomlAdapter());
 
